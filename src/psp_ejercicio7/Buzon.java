@@ -18,7 +18,6 @@ public class Buzon {
     String mensaje = "";
 
     public synchronized void usarBuzon(boolean leer,String mensa){
-        System.out.println(mensaje.length());
         if(leer){
             while(mensaje.length()==0){
                 try {
@@ -46,6 +45,37 @@ public class Buzon {
             System.out.println(currentThread().getName()+": "+mensaje);
             notifyAll();
         }
+    }
+    
+    //Probando con dos metodos
+    public synchronized void leer(){
+        while(mensaje.length()==0){
+                try {
+                    System.out.println(currentThread().getName()+": Buzon vacio");
+                    wait();
+                    System.out.println(currentThread().getName()+": sale del wait de leer");
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Buzon.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            mensaje="";
+            System.out.println(currentThread().getName()+": Buzon vaciado");            
+            notifyAll();
+    }
+    
+    public synchronized void escribir(){
+        while(mensaje.length()>0){
+                try {
+                    System.out.println(currentThread().getName()+": Buzon lleno");
+                    wait();
+                    System.out.println(currentThread().getName()+": sale del wait de escribir");
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Buzon.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+            mensaje=currentThread().getName()+" ha escrito esto";
+            System.out.println(currentThread().getName()+": "+mensaje);
+            notifyAll();
     }
 
 }
